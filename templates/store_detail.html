@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ store.name }} | DijiKala{% endblock %}
+
+{% block content %}
+
+<div class="store-header">
+    <h2>{{ store.name }}</h2>
+
+    {% if user == store.seller.user %}
+        <a href="{% url 'add_product' store.id %}" class="btn">
+            + Add Product
+        </a>
+    {% endif %}
+</div>
+
+{% if form %}
+    <hr>
+
+    <h3>Add Product</h3>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit" class="btn">
+            Add Product
+        </button>
+    </form>
+{% endif %}
+
+<hr>
+
+<h3>Products</h3>
+
+<div class="card-grid">
+
+    {% for product in products %}
+
+        <div class="card">
+
+            {% if product.image %}
+                <img
+                    src="{{ product.image.url }}"
+                    alt="{{ product.name }}"
+                >
+            {% endif %}
+
+            <h3>{{ product.name }}</h3>
+
+            <p>
+                <strong>${{ product.price }}</strong>
+            </p>
+
+            <p>
+                Stock: {{ product.stock }}
+            </p>
+
+        </div>
+
+    {% empty %}
+
+        <p>No products in this store yet.</p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}
