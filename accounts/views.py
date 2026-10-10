@@ -2,6 +2,7 @@ from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
 from .forms import LoginForm, SignUpForm
 from django.contrib.auth.decorators import login_required
+from .models import CustomerProfile
 
 def login_view(request): 
     if request.method == "POST":
@@ -52,6 +53,7 @@ def signup_view(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
+            CustomerProfile.objects.create(user=user)
             login(request, user)
             return redirect("/customer/")
 
@@ -78,6 +80,6 @@ def seller_panel(request) :
         return redirect ("login")
     seller=request.user.sellerprofile
     store=getattr(seller,"store" , None)
-    return render (request,"accounts/seller_panel.html")
+    return render (request,"accounts/seller_pannel.html")
 
     
