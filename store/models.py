@@ -3,7 +3,7 @@ from accounts.models import SellerProfile
 
 
 class Store(models.Model):
-    owner = models.OneToOneField(
+    seller = models.OneToOneField(
         SellerProfile,
         on_delete=models.CASCADE
     )
