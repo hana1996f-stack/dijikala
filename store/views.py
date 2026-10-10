@@ -2,12 +2,14 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
+from accounts.models import SellerProfile
+
 from .forms import ProductForm
 from .models import Product, Store
 
 
 def home(request):
-    products = Product.objects.all().order_by("-id")
+    products = Product.objects.filter(is_active=True).order_by("-id")
 
     return render(
         request,
@@ -33,7 +35,8 @@ def store_detail(request, store_id):
     )
 
     products = Product.objects.filter(
-        store=store
+        store=store ,
+        is_active=True
     )
 
     return render(

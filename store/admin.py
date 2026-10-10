@@ -19,4 +19,9 @@ class ProductAdmin(admin.ModelAdmin):
         "store",
         "price",
         "stock",
+        "is_active" ,
     )
+    list_filter = (
+        "is_active" , "store", )
+    
+    list_editable = ("is_active",)

@@ -2,6 +2,7 @@ from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
 from .forms import LoginForm, SignUpForm
 from django.contrib.auth.decorators import login_required
+from .models import CustomerProfile
 
 def login_view(request): 
     if request.method == "POST":
