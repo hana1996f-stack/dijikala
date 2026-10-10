@@ -80,7 +80,7 @@ def add_product(request, store_id):
         "store_detail.html",
         {
             "store": store,
-            "products": Product.objects.filter(store=store),
+            "products": Product.objects.filter(store=store ,is_active=True ,                                               ),
             "form": form,
         }
     )

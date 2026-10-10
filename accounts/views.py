@@ -53,7 +53,7 @@ def signup_view(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            CustomerProfile.object.creat(user=user)
+            CustomerProfile.objects.creat(user=user)
             login(request, user)
             return redirect("/customer/")
 
