@@ -74,7 +74,7 @@ def customer_panel(request) :
 
 @login_required
 def seller_panel(request) :
-    if not hasattr(request.user ,"seller profile"):
+    if not hasattr(request.user ,"sellerprofile"):
         return redirect ("login")
     seller=request.user.sellerprofile
     store=getattr(seller,"store" , None)
