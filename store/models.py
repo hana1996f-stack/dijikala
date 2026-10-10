@@ -23,6 +23,8 @@ class Product(models.Model):
         decimal_places=2
     )
     stock = models.PositiveIntegerField(default=0)
+    #new
+    is_active = models.BooleanField(default=True)
     # image = models.ImageField(
     #     upload_to="products/",
     #     blank=True,
