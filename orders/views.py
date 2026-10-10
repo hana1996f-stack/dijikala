@@ -73,7 +73,7 @@ def checkout (request):
                 return redirect("cart:detail")
             
             
-        seller_ids = {product.store.owner_id for product in products_by_id.values()}
+        seller_ids = {product.store.seller_id for product in products_by_id.values()}
         sellers = SellerProfile.objects.select_for_update().filter(id__in=seller_ids)
         sellers_by_id = {seller.id: seller for seller in sellers}
         
@@ -93,7 +93,7 @@ def checkout (request):
             product.stock -= item.quantity
             product.save(update_fields=["stock"])
             
-            seller = sellers_by_id[product.store.owner_id]
+            seller = sellers_by_id[product.store.seller_id]
             seller.balance += product.price * item.quantity
             seller.save(update_fields=["balance"])
             
