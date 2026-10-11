@@ -102,7 +102,15 @@ def checkout (request):
         
         cart_items.delete()
     messages.success(request, "Your order has been placed successfully!")
-    return redirect("customer_panel")
+    return redirect("orders:receipt", order_id=order.id)
+
+
+@login_required
+def order_receipt(request, order_id):
+    customer = get_object_or_404(CustomerProfile,user=request.user,)
+    order = get_object_or_404(Order.objects.prefetch_related("items__product"),id=order_id,customer=customer,)
+    return render(request,"orders/receipt.html",{"order": order},)
+
 
 @login_required 
 def order_history(request):

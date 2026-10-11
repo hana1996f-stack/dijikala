@@ -1,0 +1,302 @@
+
+{% extends "base.html" %}
+
+{% block title %}Order Receipt{% endblock %}
+
+{% block content %}
+<style>
+    .receipt-page {
+        min-height: 80vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 16px;
+        background: #f3f5f7;
+    }
+
+    .receipt {
+        width: 100%;
+        max-width: 420px;
+        padding: 30px 26px;
+        background: #fff;
+        color: #252a31;
+        font-family: Arial, sans-serif;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        position: relative;
+        overflow-wrap: anywhere;
+    }
+
+    .receipt-header {
+        text-align: center;
+    }
+
+    .success-icon {
+        width: 58px;
+        height: 58px;
+        margin: 0 auto 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: #e7f8ed;
+        color: #168447;
+        font-size: 32px;
+        font-weight: bold;
+    }
+
+    .receipt-header h1 {
+        margin: 0 0 10px;
+        font-size: 22px;
+        line-height: 1.4;
+    }
+
+    .receipt-header p {
+        margin: 0;
+        color: #68717d;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .receipt-divider {
+        border: 0;
+        border-top: 1px dashed #c9cfd6;
+        margin: 24px 0;
+    }
+
+    .receipt-meta {
+        display: grid;
+        gap: 13px;
+    }
+
+    .receipt-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        font-size: 14px;
+    }
+
+    .receipt-row span {
+        color: #737c87;
+    }
+
+    .receipt-row strong {
+        text-align: right;
+        overflow-wrap: anywhere;
+    }
+
+    .receipt-section-title {
+        margin: 0 0 18px;
+        font-size: 16px;
+    }
+
+    .receipt-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 14px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+
+    .receipt-item-info {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .receipt-item-name {
+        font-weight: 600;
+        line-height: 1.5;
+    }
+
+    .receipt-item-info small {
+        color: #737c87;
+        font-size: 12px;
+    }
+
+    .receipt-item-price {
+        white-space: nowrap;
+        font-weight: 600;
+    }
+
+    .receipt-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .receipt-total strong {
+        color: #168447;
+        font-size: 20px;
+        text-align: right;
+        overflow-wrap: anywhere;
+    }
+
+    .receipt-currency-note {
+        margin-top: 7px;
+        color: #8a929c;
+        font-size: 11px;
+        text-align: right;
+    }
+
+    .receipt-thanks {
+        margin: 25px 0;
+        padding: 16px 12px;
+        background: #f7f9fa;
+        border-radius: 8px;
+        color: #59636f;
+        font-size: 13px;
+        line-height: 1.8;
+        text-align: center;
+    }
+
+    .receipt-button {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 14px 18px;
+        background: #168447;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        text-decoration: none;
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        transition: background 0.2s ease;
+    }
+
+    .receipt-button:hover {
+        background: #116b39;
+        color: white;
+    }
+
+    .receipt-footer {
+        margin-top: 20px;
+        color: #a0a7b0;
+        font-size: 11px;
+        text-align: center;
+        letter-spacing: 1px;
+    }
+
+    @media (max-width: 480px) {
+        .receipt-page {
+            padding: 20px 12px;
+        }
+
+        .receipt {
+            padding: 25px 18px;
+        }
+
+        .receipt-header h1 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<section class="receipt-page">
+    <div class="receipt">
+
+        <!-- Success message -->
+        <header class="receipt-header">
+            <div class="success-icon">✓</div>
+
+            <h1>Order Placed Successfully!</h1>
+
+            <p>
+                Your payment was completed successfully.
+                Here is your order receipt.
+            </p>
+        </header>
+
+        <hr class="receipt-divider">
+
+        <!-- Order information -->
+        <div class="receipt-meta">
+            <div class="receipt-row">
+                <span>Order Number</span>
+                <strong>#{{ order.id }}</strong>
+            </div>
+
+            <div class="receipt-row">
+                <span>Date</span>
+                <strong>{{ order.created_at|date:"d M Y" }}</strong>
+            </div>
+
+            <div class="receipt-row">
+                <span>Time</span>
+                <strong>{{ order.created_at|time:"H:i" }}</strong>
+            </div>
+
+            <div class="receipt-row">
+                <span>Status</span>
+                <strong style="color: #168447;">Completed</strong>
+            </div>
+        </div>
+
+        <hr class="receipt-divider">
+
+        <!-- Purchased products -->
+        <section>
+            <h2 class="receipt-section-title">Purchase Details</h2>
+
+            {% for item in order.items.all %}
+                <div class="receipt-item">
+                    <div class="receipt-item-info">
+                        <span class="receipt-item-name">
+                            {{ item.product.name }}
+                        </span>
+
+                        <small>
+                            {{ item.quantity }} ×
+                            {{ item.price|floatformat:2 }}
+                        </small>
+                    </div>
+
+                    <span class="receipt-item-price">
+                        {{ item.subtotal|floatformat:2 }}
+                    </span>
+                </div>
+            {% empty %}
+                <p>No items were found for this order.</p>
+            {% endfor %}
+        </section>
+
+        <hr class="receipt-divider">
+
+        <!-- Final total -->
+        <div class="receipt-total">
+            <span>Total Paid</span>
+
+            <strong>
+                {{ order.total_amount|floatformat:2 }}
+            </strong>
+        </div>
+
+        <p class="receipt-currency-note">
+            Amounts are displayed in your store's currency.
+        </p>
+
+        <!-- Thank-you message -->
+        <div class="receipt-thanks">
+            Thank you for shopping with us!<br>
+            We appreciate your trust and hope to see you again.
+        </div>
+
+        <!-- Back to store -->
+        <a href="{% url 'home' %}" class="receipt-button">
+            ← Continue Shopping
+        </a>
+
+        <div class="receipt-footer">
+            THANK YOU FOR YOUR PURCHASE
+        </div>
+
+    </div>
+</section>
+{% endblock %}

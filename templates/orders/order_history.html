@@ -4,7 +4,14 @@
 <h2>My Orders</h2>
 {% for order in orders %}
 <div class="card">
+
     <h3>Order #{{ order.id }}</h3>
+
+    <a href="{% url 'orders:receipt' order_id=order.id %}"
+    class="btn">
+        View Receipt
+    </a>
+
 
     <p>
         <strong>Date:</strong>
