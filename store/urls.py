@@ -1,3 +1,4 @@
+
 from django.urls import path
 
 from .views import (
@@ -5,7 +6,8 @@ from .views import (
     store_list,
     store_detail,
     add_product,
-    create_store ,
+    create_store,
+    toggle_product_active,
 )
 
 
@@ -34,5 +36,11 @@ urlpatterns = [
         "stores/create/",
         create_store,
         name="create_store"
+    ),
+
+    path(
+        "products/<int:product_id>/toggle-active/",
+        toggle_product_active,
+        name="toggle_product_active"
     ),
 ]

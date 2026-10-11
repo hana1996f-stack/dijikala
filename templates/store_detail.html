@@ -8,7 +8,7 @@
 <div class="store-header">
     <h2>{{ store.name }}</h2>
 
-    {% if user == store.seller.user %}
+    {% if user.is_authenticated and user == store.seller.user %}
         <a href="{% url 'add_product' store.id %}" class="btn">
             + Add Product
         </a>
@@ -51,11 +51,41 @@
                 Stock: {{ product.stock }}
             </p>
 
-            {% if not user.is_authenticated %}
+            {% if user.is_authenticated and user == store.seller.user %}
 
-                <a href="{% url 'login' %}" class="btn">
-                    Login to Buy
-                </a>
+                <p>
+                    <strong>Status:</strong>
+                    {% if product.is_active %}
+                        Active
+                    {% else %}
+                        Deactivated
+                    {% endif %}
+                </p>
+
+                <form method="post"
+                      action="{% url 'toggle_product_active' product.id %}">
+                    {% csrf_token %}
+
+                    {% if product.is_active %}
+                        <button type="submit" class="btn">
+                            Deactivate
+                        </button>
+                    {% else %}
+                        <button type="submit" class="btn">
+                            Activate
+                        </button>
+                    {% endif %}
+                </form>
+
+            {% elif not user.is_authenticated %}
+
+                {% if product.stock < 1 %}
+                    <span>Out of stock</span>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn">
+                        Login to Buy
+                    </a>
+                {% endif %}
 
             {% elif user.is_superuser %}
 
@@ -64,19 +94,16 @@
             {% elif user.customerprofile %}
 
                 {% if product.stock < 1 %}
-
                     <span>Out of stock</span>
-
                 {% else %}
-
-                    <form method="post" action="{% url 'cart:add' product.id %}">
+                    <form method="post"
+                          action="{% url 'cart:add' product.id %}">
                         {% csrf_token %}
 
                         <button type="submit" class="btn">
                             Add to Cart
                         </button>
                     </form>
-
                 {% endif %}
 
             {% else %}
