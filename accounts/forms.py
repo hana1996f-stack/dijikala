@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth import authenticate 
 from django.contrib.auth.models import User 
 from django.contrib.auth.forms import UserCreationForm
+from .models import CustomerProfile
 
 class LoginForm(forms.Form):
     username = forms.CharField(label="Username")
@@ -28,9 +29,7 @@ class LoginForm(forms.Form):
         return cleaned_data
 
 class SignUpForm(UserCreationForm):
-    email = forms.EmailField(
-        required=True
-    )
+    phone = forms.CharField (label="phone number" , max_length=15 , required=True)
     class Meta:
         model = User
         fields = [
@@ -40,12 +39,12 @@ class SignUpForm(UserCreationForm):
             "password2",
         ]
 
-    def clean_email(self):
-        email = self.cleaned_data["email"]
+    def clean_phone(self):
+        phone= self.cleaned_data["phone"].strip ()
+        if not phone.isdigit():
+            raise forms.ValidationError ("please inter a valid phone number.")
+        if CustomerProfile.objects.filter(phone=phone).exists() :
+            raise forms.ValidationError ("an account with this phone number already exists.")
+        return phone
 
-        if User.objects.filter(email=email).exists():
-            raise forms.ValidationError(
-                "An account with this email already exists."
-            )
 
-        return email

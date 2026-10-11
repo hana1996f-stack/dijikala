@@ -19,10 +19,12 @@ def home(request):
 
 @login_required
 def create_store(request):
-    if not hasattr(request.user, "sellerprofile"):
+    if hasattr(request.user, "customerprofile"):
         return redirect("customer_panel")
-    seller = request.user.sellerprofile
-
+    seller=getattr(request.user , "sellerprofile" , None)
+    if seller is None :
+        return redirect ("login")
+ 
     if Store.objects.filter(seller=seller).exists():
         return redirect("seller_panel")
 

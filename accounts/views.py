@@ -1,9 +1,7 @@
-<<<<<<< HEAD
+
 from django.contrib.auth import login, logout  
-=======
 from django.contrib.auth import login, logout
 from django.http import request
->>>>>>> 41916cc4d5bce4a170bbbd7adf71c2674fca2509
 from django.shortcuts import render, redirect
 from .forms import LoginForm, SignUpForm
 from django.contrib.auth.decorators import login_required
@@ -61,7 +59,7 @@ def signup_view(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            CustomerProfile.objects.create(user=user)
+            CustomerProfile.objects.create(user=user , phone=form.cleaned_data["phone"])
             login(request, user)
             return redirect("/customer/")
 
