@@ -80,6 +80,6 @@ def seller_panel(request) :
         return redirect ("login")
     seller=request.user.sellerprofile
     store=getattr(seller,"store" , None)
-    return render (request,"accounts/seller_pannel.html")
+    return render (request,"accounts/seller_pannel.html" , {"store" : store ,})
 
     

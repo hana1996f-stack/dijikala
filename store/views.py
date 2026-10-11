@@ -17,6 +17,34 @@ def home(request):
         {"products": products}
     )
 
+@login_required
+def create_store(request):
+    if not hasattr(request.user, "sellerprofile"):
+        return redirect("customer_panel")
+    seller = request.user.sellerprofile
+
+    if Store.objects.filter(seller=seller).exists():
+        return redirect("seller_panel")
+
+    if request.method == "POST":
+        form = StoreForm(request.POST)
+
+        if form.is_valid():
+            store = form.save(commit=False)
+            store.seller = seller
+            store.save()
+
+            return redirect("seller_panel")
+
+    else:
+        form = StoreForm()
+
+    return render(
+        request,
+        "store/create_store.html",
+        {"form": form},
+    )
+
 
 def store_list(request):
     stores = Store.objects.all().order_by("-id")
