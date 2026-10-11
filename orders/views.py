@@ -10,8 +10,10 @@ from accounts.models import CustomerProfile, SellerProfile
 from cart.models import CartItem
 from store.models import Product
 from .models import Order, OrderItem
+from django.views.decorators.http import require_POST
 
 @login_required
+@require_POST
 def checkout (request):
     customer = get_object_or_404(CustomerProfile, user=request.user,)
     

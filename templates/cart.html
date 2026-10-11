@@ -83,9 +83,14 @@
     ${{ customer.balance }}
     </p>
 
-    <a href="{% url 'orders:checkout' %}" class="btn">
-        Checkout
-    </a>
+
+    <form method="post" action="{% url 'orders:checkout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn">
+            Checkout
+        </button>
+    </form>
+
 
 {% else %}
     <p>Your cart is empty.</p>
