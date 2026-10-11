@@ -81,8 +81,6 @@ It prevents concurrent transactions from modifying the same selected rows until 
 It should be used inside `transaction.atomic()` and supported by the database backend.
 
 
-## Extra Features
 
-I will also try to add some extra features, such as product search, categories, product images, stock checking, and an order confirmation page.
 
 
