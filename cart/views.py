@@ -22,28 +22,45 @@ def cart_detail(request):
     return render(request, "cart/cart_detail.html", {"cart_items": cart_items, "total": total,})
 
 
+
 @login_required
 @require_POST
 def add_to_cart(request, product_id):
     customer = getattr(request.user, "customerprofile", None)
-    
+
     if customer is None:
         return redirect("login")
-    
+
     product = get_object_or_404(Product, id=product_id)
-    
+
+    if not product.is_active:
+        messages.error(request, "This product is no longer available.")
+        return redirect("cart:detail")
+
     if product.stock < 1:
         messages.error(request, "This product is out of stock.")
         return redirect("cart:detail")
-    
-    cart_item, created = CartItem.objects.get_or_create(customer=customer,product=product,defaults={"quantity": 1},)
-    
+
+    cart_item, created = CartItem.objects.get_or_create(
+        customer=customer,
+        product=product,
+        defaults={"quantity": 1},
+    )
+
     if not created:
-        if cart_item.quantity < product.stock:
-            cart_item.quantity += 1
-            cart_item.save(update_fields=["quantity"])
-            
-            
+        if cart_item.quantity >= product.stock:
+            messages.error(
+                request,
+                f"Only {product.stock} items are available."
+            )
+            return redirect("cart:detail")
+
+        cart_item.quantity += 1
+        cart_item.save(update_fields=["quantity"])
+
+    messages.success(request, "Product added to your cart.")
+    return redirect("cart:detail")
+
 @login_required
 @require_POST
 def remove_from_cart(request, item_id):
