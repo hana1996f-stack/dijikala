@@ -103,3 +103,24 @@ def checkout (request):
         cart_items.delete()
     messages.success(request, "Your order has been placed successfully!")
     return redirect("customer_panel")
+
+@login_required 
+def order_history(request):
+    customer = getattr(request.user, "customerprofile", None)
+    if customer is None:
+        return redirect("login")
+
+    orders = (
+        Order.objects
+        .filter(customer=customer)
+        .prefetch_related("items__product")
+        .order_by("-created_at")
+    )
+
+    return render(
+        request,
+        "orders/order_history.html",
+        {
+            "orders": orders,
+        },
+    )

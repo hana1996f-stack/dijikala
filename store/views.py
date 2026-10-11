@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from accounts.models import SellerProfile
 
-from .forms import ProductForm
+from .forms import ProductForm , StoreForm
 from .models import Product, Store
 
 
