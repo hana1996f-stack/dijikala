@@ -1,6 +1,6 @@
-from django.core.management.base import BaseCommand 
+from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
-from accounts.models import SellerProfile, CustomerProfile 
+from accounts.models import SellerProfile, CustomerProfile
 from store.models import Store, Product
 
 class Command(BaseCommand):
@@ -64,12 +64,16 @@ class Command(BaseCommand):
         # Create Stores
         # =========================
 
+
+
         stores_data = [
-            ("فروشگاه دیجیتال", seller_profiles[0]),
-            ("موبایل سنتر", seller_profiles[1]),
-            ("لپ تاپ مارکت", seller_profiles[2]),
-            ("گجت لند", seller_profiles[3]),
+            ("Digital Store", seller_profiles[0]),
+            ("Mobile Center", seller_profiles[1]),
+            ("Laptop Market", seller_profiles[2]),
+            ("Gadget Land", seller_profiles[3]),
         ]
+
+
 
         stores = []
 
@@ -88,29 +92,29 @@ class Command(BaseCommand):
         # =========================
 
         products_data = [
-            (stores[0], "iPhone 15", 45000000, 10),
-            (stores[0], "iPhone 16", 58000000, 8),
-            (stores[0], "AirPods Pro", 12000000, 20),
-            (stores[0], "Apple Watch", 18000000, 12),
+            (stores[0], "iPhone 15", 450000, 10),
+            (stores[0], "iPhone 16", 580000, 8),
+            (stores[0], "AirPods Pro", 120000, 20),
+            (stores[0], "Apple Watch", 180000, 12),
 
-            (stores[1], "Samsung Galaxy S24", 38000000, 15),
-            (stores[1], "Samsung Galaxy S25", 52000000, 10),
-            (stores[1], "Galaxy Buds", 8500000, 25),
-            (stores[1], "Samsung Watch", 15000000, 10),
+            (stores[1], "Samsung Galaxy S24", 380000, 15),
+            (stores[1], "Samsung Galaxy S25", 520000, 10),
+            (stores[1], "Galaxy Buds", 85000, 25),
+            (stores[1], "Samsung Watch", 150000, 10),
 
-            (stores[2], "MacBook Air", 75000000, 6),
-            (stores[2], "MacBook Pro", 110000000, 4),
-            (stores[2], "ASUS VivoBook", 42000000, 8),
-            (stores[2], "Lenovo ThinkPad", 55000000, 7),
+            (stores[2], "MacBook Air", 750000, 6),
+            (stores[2], "MacBook Pro", 1100000, 4),
+            (stores[2], "ASUS VivoBook", 420000, 8),
+            (stores[2], "Lenovo ThinkPad", 550000, 7),
 
-            (stores[3], "Xiaomi Watch", 9000000, 18),
-            (stores[3], "Xiaomi Band", 3500000, 30),
-            (stores[3], "Smart Home Camera", 7000000, 15),
-            (stores[3], "Smart Speaker", 6000000, 12),
+            (stores[3], "Xiaomi Watch", 90000, 18),
+            (stores[3], "Xiaomi Band", 35000, 30),
+            (stores[3], "Smart Home Camera", 70000, 15),
+            (stores[3], "Smart Speaker", 60000, 12),
         ]
 
         for store, name, price, stock in products_data:
-            Product.objects.get_or_create(
+            Product.objects.update_or_create(
                 store=store,
                 name=name,
                 defaults={

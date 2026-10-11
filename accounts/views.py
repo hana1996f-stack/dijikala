@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 from django.contrib.auth import login, logout  
+=======
+from django.contrib.auth import login, logout
+from django.http import request
+>>>>>>> 41916cc4d5bce4a170bbbd7adf71c2674fca2509
 from django.shortcuts import render, redirect
 from .forms import LoginForm, SignUpForm
 from django.contrib.auth.decorators import login_required
@@ -7,7 +12,7 @@ from decimal import Decimal
 from django.contrib import messages
 from django import forms
 
-def login_view(request): 
+def login_view(request):
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -51,7 +56,7 @@ def login_view(request):
         "accounts/login.html",
         {"form": form}
     )
-def signup_view(request): 
+def signup_view(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -69,7 +74,7 @@ def signup_view(request):
         {"form": form}
     )
 @login_required
-def logout_view(request): 
+def logout_view(request):
     logout(request)
     return render( request, "accounts/logout.html" )
 
@@ -86,23 +91,31 @@ def seller_panel(request) :
         return redirect ("login")
     seller=request.user.sellerprofile
     store=getattr(seller,"store" , None)
-    return render (request,"accounts/seller_pannel.html" , {"store" : store ,})
+
+
+    return render(request, "accounts/seller_pannel.html", {"store": store})
+
 
 class BalanceForm(forms.Form):
-    amount = forms.DecimalField( min_value=Decimal("1.00"), max_digits=12, decimal_places=2, label="Amount", )
+    amount = forms.DecimalField(
+        min_value=Decimal("1.00"),
+        max_digits=12,
+        decimal_places=2,
+        label="Amount",
+    )
 
-@login_required 
-def payment_view(request): 
+
+@login_required
+def payment_view(request):
     customer = getattr(request.user, "customerprofile", None)
     if customer is None:
-       return redirect("login")
+        return redirect("login")
 
     if request.method == "POST":
         form = BalanceForm(request.POST)
 
         if form.is_valid():
             amount = form.cleaned_data["amount"]
-
             customer.balance += amount
             customer.save(update_fields=["balance"])
 
@@ -110,7 +123,6 @@ def payment_view(request):
                 request,
                 "Your balance has been increased successfully.",
             )
-
             return redirect("customer_panel")
     else:
         form = BalanceForm()
@@ -118,11 +130,5 @@ def payment_view(request):
     return render(
         request,
         "accounts/payment.html",
-        {
-            "form": form,
-            "customer": customer,
-        },
+        {"form": form, "customer": customer},
     )
-
-
-    
