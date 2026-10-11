@@ -1,5 +1,4 @@
 from django.contrib.auth import login, logout  
-from django.http import request
 from django.shortcuts import render, redirect
 from .forms import LoginForm, SignUpForm
 from django.contrib.auth.decorators import login_required
