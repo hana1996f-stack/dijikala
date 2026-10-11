@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 
 {% block title %}{{ store.name }} | DijiKala{% endblock %}
@@ -49,6 +50,40 @@
             <p>
                 Stock: {{ product.stock }}
             </p>
+
+            {% if not user.is_authenticated %}
+
+                <a href="{% url 'login' %}" class="btn">
+                    Login to Buy
+                </a>
+
+            {% elif user.is_superuser %}
+
+                <span>Admin account</span>
+
+            {% elif user.customerprofile %}
+
+                {% if product.stock < 1 %}
+
+                    <span>Out of stock</span>
+
+                {% else %}
+
+                    <form method="post" action="{% url 'cart:add' product.id %}">
+                        {% csrf_token %}
+
+                        <button type="submit" class="btn">
+                            Add to Cart
+                        </button>
+                    </form>
+
+                {% endif %}
+
+            {% else %}
+
+                <span>Customer account required</span>
+
+            {% endif %}
 
         </div>
 

@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 
 class CustomerProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE )
     phone=models.CharField (max_length=15 , unique=True , blank=True , null=True)
     balance = models.DecimalField(
         max_digits=12,

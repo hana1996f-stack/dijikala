@@ -1,0 +1,50 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Seller Panel | DijiKala{% endblock %}
+
+{% block content %}
+
+<div class="seller-panel">
+
+    <h2>👨‍💼 Seller Panel</h2>
+
+    <div class="seller-actions">
+        <a href="{% url 'create_store' %}" class="btn">
+            + Create New Store
+        </a>
+
+        <a href="{% url 'payment' %}" class="btn">
+            Increase Balance
+        </a>
+    </div>
+
+    <hr>
+
+    <h3>My Store</h3>
+
+    {% if store %}
+
+        <div class="card">
+            <h3>🏪 {{ store.name }}</h3>
+
+            <div class="seller-store-actions">
+                <a href="{% url 'store_detail' store.id %}" class="btn">
+                    Manage Store
+                </a>
+
+                <a href="{% url 'add_product' store.id %}" class="btn">
+                    + Add Product
+                </a>
+            </div>
+        </div>
+
+    {% else %}
+
+        <p>You have no stores yet. Create your first store to get started.</p>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

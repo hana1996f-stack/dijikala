@@ -54,14 +54,30 @@ def login_view(request):
         "accounts/login.html",
         {"form": form}
     )
+
+
 def signup_view(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
+
         if form.is_valid():
             user = form.save()
-            CustomerProfile.objects.create(user=user , phone=form.cleaned_data["phone"])
-            login(request, user)
-            return redirect("/customer/")
+            role = form.cleaned_data["role"]
+
+            if role == "customer":
+                CustomerProfile.objects.create(
+                    user=user,
+                    phone=form.cleaned_data["phone"],
+                )
+                login(request, user)
+                return redirect("/customer/")
+
+            elif role == "seller":
+                from .models import SellerProfile
+
+                SellerProfile.objects.create(user=user)
+                login(request, user)
+                return redirect("/seller/")
 
     else:
         form = SignUpForm()
@@ -69,8 +85,10 @@ def signup_view(request):
     return render(
         request,
         "accounts/signup.html",
-        {"form": form}
+        {"form": form},
     )
+
+
 @login_required
 def logout_view(request):
     logout(request)
@@ -91,7 +109,7 @@ def seller_panel(request) :
     store=getattr(seller,"store" , None)
 
 
-    return render(request, "accounts/seller_pannel.html", {"store": store})
+    return render(request, "accounts/seller_panel.html", {"store": store})
 
 
 class BalanceForm(forms.Form):
