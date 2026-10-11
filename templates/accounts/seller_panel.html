@@ -9,13 +9,20 @@
 
     <h2>👨‍💼 Seller Panel</h2>
 
+    <div class="card" style="max-width: 400px;">
+        <h3>💰 My Balance</h3>
+        <p>
+            <strong>Balance:</strong> ${{ seller.balance }}
+        </p>
+    </div>
+
     <div class="seller-actions">
         <a href="{% url 'create_store' %}" class="btn">
             + Create New Store
         </a>
 
         <a href="{% url 'payment' %}" class="btn">
-            Increase Balance
+            💳 Increase Balance
         </a>
     </div>
 

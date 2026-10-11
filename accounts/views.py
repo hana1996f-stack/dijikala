@@ -102,14 +102,16 @@ def customer_panel(request) :
     return render (request,"accounts/customer_panel.html" ,  {"customer" :customer} , )
 
 @login_required
-def seller_panel(request) :
-    if not hasattr(request.user ,"sellerprofile"):
-        return redirect ("login")
-    seller=request.user.sellerprofile
-    store=getattr(seller,"store" , None)
+def seller_panel(request):
+    seller = getattr(request.user, "sellerprofile", None)
 
+    if seller is None:
+        return redirect("login")
 
-    return render(request, "accounts/seller_panel.html", {"store": store})
+    store = getattr(seller, "store", None)
+
+    return render(request, "accounts/seller_panel.html",{"seller": seller,
+            "store": store,})
 
 
 class BalanceForm(forms.Form):
