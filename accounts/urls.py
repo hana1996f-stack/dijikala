@@ -8,4 +8,5 @@ urlpatterns = [
     path("signup/", signup_view , name="signup"),
     path("customer/" , customer_panel  , name = "customer_panel" ) ,
     path("seller/" , seller_panel  , name = "seller_panel" )
+    
 ]

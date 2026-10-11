@@ -2,17 +2,47 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import ProductForm
+from accounts.models import SellerProfile
+
+from .forms import ProductForm , StoreForm
 from .models import Product, Store
 
 
 def home(request):
-    products = Product.objects.all().order_by("-id")
+    products = Product.objects.filter(is_active=True).order_by("-id")
 
     return render(
         request,
         "home.html",
         {"products": products}
+    )
+
+@login_required
+def create_store(request):
+    if not hasattr(request.user, "sellerprofile"):
+        return redirect("customer_panel")
+    seller = request.user.sellerprofile
+
+    if Store.objects.filter(seller=seller).exists():
+        return redirect("seller_panel")
+
+    if request.method == "POST":
+        form = StoreForm(request.POST)
+
+        if form.is_valid():
+            store = form.save(commit=False)
+            store.seller = seller
+            store.save()
+
+            return redirect("seller_panel")
+
+    else:
+        form = StoreForm()
+
+    return render(
+        request,
+        "store/create_store.html",
+        {"form": form},
     )
 
 
@@ -33,7 +63,8 @@ def store_detail(request, store_id):
     )
 
     products = Product.objects.filter(
-        store=store
+        store=store ,
+        is_active=True
     )
 
     return render(
@@ -77,7 +108,7 @@ def add_product(request, store_id):
         "store_detail.html",
         {
             "store": store,
-            "products": Product.objects.filter(store=store),
+            "products": Product.objects.filter(store=store ,is_active=True ,                                               ),
             "form": form,
         }
     )

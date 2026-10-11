@@ -1,0 +1,20 @@
+{% extends ‘base.html’ %}
+
+{% block title %}Create Store | DijiKala{% endblock %}
+
+{% block content %}
+
+<h2>Create Your Store</h2>
+
+<form method="post">
+    {% csrf_token %}
+{{ form.as_p }}
+<button type="submit" class="btn">
+    Create Store
+</button>
+</form>
+
+
+Back to Seller Panel
+
+{% endblock %}

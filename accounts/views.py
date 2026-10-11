@@ -1,7 +1,12 @@
 from django.contrib.auth import login, logout  
+from django.http import request
 from django.shortcuts import render, redirect
 from .forms import LoginForm, SignUpForm
 from django.contrib.auth.decorators import login_required
+from .models import CustomerProfile
+from decimal import Decimal
+from django.contrib import messages
+from django import forms
 
 def login_view(request): 
     if request.method == "POST":
@@ -52,6 +57,7 @@ def signup_view(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
+            CustomerProfile.objects.create(user=user)
             login(request, user)
             return redirect("/customer/")
 
@@ -70,14 +76,54 @@ def logout_view(request):
 
 @login_required
 def customer_panel(request) :
-    return render (request,"accounts/customer_panel.html")
+    customer=getattr(request.user, "customerprofile", None)
+    if customer is None:
+        return redirect("login")
+    return render (request,"accounts/customer_panel.html" ,  {"customer" :customer} , )
 
 @login_required
 def seller_panel(request) :
-    if not hasattr(request.user ,"seller profile"):
+    if not hasattr(request.user ,"sellerprofile"):
         return redirect ("login")
     seller=request.user.sellerprofile
     store=getattr(seller,"store" , None)
-    return render (request,"accounts/seller_panel.html")
+    return render (request,"accounts/seller_pannel.html" , {"store" : store ,})
+
+class BalanceForm(forms.Form):
+    amount = forms.DecimalField( min_value=Decimal("1.00"), max_digits=12, decimal_places=2, label="Amount", )
+
+@login_required 
+def payment_view(request): 
+    customer = getattr(request.user, "customerprofile", None)
+    if customer is None:
+       return redirect("login")
+
+    if request.method == "POST":
+        form = BalanceForm(request.POST)
+
+        if form.is_valid():
+            amount = form.cleaned_data["amount"]
+
+            customer.balance += amount
+            customer.save(update_fields=["balance"])
+
+            messages.success(
+                request,
+                "Your balance has been increased successfully.",
+            )
+
+            return redirect("customer_panel")
+    else:
+        form = BalanceForm()
+
+    return render(
+        request,
+        "accounts/payment.html",
+        {
+            "form": form,
+            "customer": customer,
+        },
+    )
+
 
     

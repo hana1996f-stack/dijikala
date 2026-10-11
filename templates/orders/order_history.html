@@ -1,0 +1,35 @@
+% extends ‘base.html’ %}
+{% block title %}Order History | DijiKala{% endblock %}
+{% block content %}
+<h2>My Orders</h2>
+{% for order in orders %}
+<div class="card">
+    <h3>Order #{{ order.id }}</h3>
+
+    <p>
+        <strong>Date:</strong>
+        {{ order.created_at }}
+    </p>
+
+    <p>
+        <strong>Total:</strong>
+        {{ order.total_amount }}
+    </p>
+
+    <h4>Products</h4>
+
+    {% for item in order.items.all %}
+        <p>
+            {{ item.product.name }}
+            — Quantity: {{ item.quantity }}
+            — Price: {{ item.price }}
+        </p>
+    {% empty %}
+        <p>No products found for this order.</p>
+    {% endfor %}
+</div>
+{% empty %} You have not placed any orders yet. {% endfor %}
+<a href="{% url 'customer_panel' %}">
+    Back to Customer Panel
+</a>
+{% endblock %}

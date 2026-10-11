@@ -73,9 +73,9 @@ class Command(BaseCommand):
 
         stores = []
 
-        for name, owner in stores_data:
+        for name, seller in stores_data:
             store, created = Store.objects.get_or_create(
-                owner=owner,
+                seller=seller,
                 defaults={
                     "name": name
                 }
