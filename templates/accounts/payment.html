@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Increase Balance | DijiKala{% endblock %}
+{% block content %}
+<h2>Increase Account Balance</h2>
+<p>Current balance: {{ customer.balance }}</p>
+<form method="post">
+    {% csrf_token %}
+{{ form.as_p }}
+
+<button type="submit" class="btn">
+    Increase Balance
+</button>
+</form>
+<a href="{% url 'customer_panel' %}">
+    Back to Customer Panel
+</a>
+{% endblock %}

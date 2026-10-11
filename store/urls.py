@@ -5,6 +5,7 @@ from .views import (
     store_list,
     store_detail,
     add_product,
+    create_store ,
 )
 
 
@@ -27,5 +28,11 @@ urlpatterns = [
         "stores/<int:store_id>/add-product/",
         add_product,
         name="add_product"
+    ),
+
+    path(
+        "stores/create/",
+        create_store,
+        name="create_store"
     ),
 ]
